@@ -13,6 +13,7 @@ class CourseController extends Controller
     public function index()
     {
         //
+        return 'hello guru, berikut kelas anda';
     }
 
     /**
