@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('dashboard')->name('dashboard')->group(function () {
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::resource('courses', CourseController::class)->middleware('role:teacher');
 
         Route::get('courses/questions/create/{courses}', [CourseQuestionController::class, 'create'])->middleware('role:teacher')->name('courses.create.question');
