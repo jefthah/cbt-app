@@ -207,20 +207,23 @@
                         </div>
 
                         @if($course->category->name == 'Business')
-                        <div class="flex shrink-0 w-[170px] items-center justify-center">
-                            <p class="p-[8px_16px] rounded-full bg-[#D5EFFE] font-bold text-sm" style="color: #066DFE">
-                                {{ $course->category->name }}</p>
-                        </div>
+                            <div class="flex shrink-0 w-[170px] items-center justify-center">
+                                <p class="p-[8px_16px] rounded-full bg-[#D5EFFE] font-bold text-sm" style="color: #066DFE">
+                                    {{ $course->category->name }}
+                                </p>
+                            </div>
                         @elseif($course->category->name == 'Programming')
-                        <div class="flex shrink-0 w-[170px] items-center justify-center">
-                            <p class="p-[8px_16px] rounded-full bg-[#EAE8FE] font-bold text-sm" style="color: #6436F1">
-                                {{ $course->category->name }}</p>
-                        </div>
+                            <div class="flex shrink-0 w-[170px] items-center justify-center">
+                                <p class="p-[8px_16px] rounded-full bg-[#EAE8FE] font-bold text-sm" style="color: #6436F1">
+                                    {{ $course->category->name }}
+                                </p>
+                            </div>
                         @elseif($course->category->name == 'Lifestyle')
-                        <div class="flex shrink-0 w-[170px] items-center justify-center">
-                            <p class="p-[8px_16px] rounded-full bg-[#FFF2E6] font-bold text-sm" style="color: #F6770B">
-                                {{ $course->category->name }}</p>
-                        </div>
+                            <div class="flex shrink-0 w-[170px] items-center justify-center">
+                                <p class="p-[8px_16px] rounded-full bg-[#FFF2E6] font-bold text-sm" style="color: #F6770B">
+                                    {{ $course->category->name }}
+                                </p>
+                            </div>
                         @endif
                         <div class="flex shrink-0 w-[120px] items-center">
                             <div class="relative h-[41px]">
