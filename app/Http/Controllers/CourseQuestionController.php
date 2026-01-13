@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseQuestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+
 
 class CourseQuestionController extends Controller
 {
@@ -18,17 +22,52 @@ class CourseQuestionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Course $course)
     {
-        //
+        $students = $course->students()->orderBy('id', 'DESC')->get();
+        return view('admin.questions.create', [
+            'course' => $course,
+            'students' => $students
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Course $course)
     {
-        //
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'answers' => 'required|array',
+            'answers.*' => 'required|string',
+            'correct_answer' => 'required|integer',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $question = $course->question()->create([
+                'question' => $request->question,
+            ]);
+
+            foreach ($request->answers as $index => $answerText) {
+                $isCorrect = ($request->correct_answer == $index);
+                $question->answer()->create([
+                    'answer' => $answerText,
+                    'is_correct' => $isCorrect,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('dashboard.courses.show', $course->id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System error!' . $e->getMessage()]
+            ]);
+            throw $error;
+        }
     }
 
     /**
