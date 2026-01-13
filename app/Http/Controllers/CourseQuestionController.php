@@ -81,17 +81,67 @@ class CourseQuestionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CourseQuestion $courseQuestion)
+    public function edit(CourseQuestion $coursesQuestion)
     {
-        //
+        $course = $coursesQuestion->course;
+
+        if (!$course) {
+            return redirect()->back()->with('error', 'Course not found for this question.');
+        }
+
+        $students = $course->students()->orderBy('id', 'DESC')->get();
+        $answers = $coursesQuestion->answer()->get();
+
+        return view('admin.questions.edit', [
+            'question' => $coursesQuestion,
+            'course' => $course,
+            'students' => $students,
+            'answers' => $answers
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CourseQuestion $courseQuestion)
+    public function update(Request $request, CourseQuestion $coursesQuestion)
     {
-        //
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'answers' => 'required|array',
+            'answers.*' => 'required|string',
+            'correct_answer' => 'required|integer',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Update question text
+            $coursesQuestion->update([
+                'question' => $request->question,
+            ]);
+
+            // Delete old answers
+            $coursesQuestion->answer()->delete();
+
+            // Create new answers
+            foreach ($request->answers as $index => $answerText) {
+                $isCorrect = ($request->correct_answer == $index);
+                $coursesQuestion->answer()->create([
+                    'answer' => $answerText,
+                    'is_correct' => $isCorrect,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('dashboard.courses.show', $coursesQuestion->course_id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System error! ' . $e->getMessage()]
+            ]);
+            throw $error;
+        }
     }
 
     /**
