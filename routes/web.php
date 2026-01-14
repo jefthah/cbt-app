@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
         Route::post('courses/questions/save/{course}', [CourseQuestionController::class, 'store'])->middleware('role:teacher')->name('courses.create.question.store');
 
-        Route::resource('courses_questions', CourseQuestionController::class)->middleware('role:teacher');
+        Route::resource('courses_questions', CourseQuestionController::class)->middleware('role:teacher')->except('create');
 
         Route::get('/couse/students/show/{course}', [CourseStudentController::class, 'index'])->middleware('role:teacher')->name('course.course_students.show');
 

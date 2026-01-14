@@ -147,8 +147,17 @@ class CourseQuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CourseQuestion $courseQuestion)
+    public function destroy(CourseQuestion $coursesQuestion)
     {
-        //
+        try {
+            $coursesQuestion->delete();
+            return redirect()->route('dashboard.courses.show', $coursesQuestion->course_id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System error!' . $e->getMessage()]
+            ]);
+            throw $error;
+        }
     }
 }
