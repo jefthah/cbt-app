@@ -26,9 +26,43 @@ class StudentAnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $course, $question)
     {
-        //
+        $request->validate([
+            'system_answer_id' => 'required|exists:course_answers,id',
+        ]);
+
+        $user = auth()->user();
+
+        $selectedAnswer = \App\Models\CourseAnswer::find($request->system_answer_id);
+
+        if ($selectedAnswer->is_correct == 'correct') {
+            $result = "Correct";
+        } else {
+            $result = "Wrong";
+        }
+
+        // Simpan jawaban siswa
+        StudentAnswer::create([
+            'user_id' => $user->id,
+            'course_question_id' => $question,
+            'answer' => $result,
+        ]);
+
+        // Cari pertanyaan berikutnya di kursus yang sama
+        $nextQuestion = \App\Models\CourseQuestion::where('course_id', $course)
+            ->where('id', '>', $question)
+            ->orderBy('id', 'asc')
+            ->first();
+
+        if ($nextQuestion) {
+            return redirect()->route('dashboard.learning.course.show', [
+                'course' => $course,
+                'question' => $nextQuestion->id
+            ]);
+        } else {
+            return redirect()->route('dashboard.learning.finished.course', $course);
+        }
     }
 
     /**

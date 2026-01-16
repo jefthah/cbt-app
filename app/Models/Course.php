@@ -11,14 +11,14 @@ class Course extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [
-        'id', 
+        'id',
     ];
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function question()
+    public function questions()
     {
         return $this->hasMany(CourseQuestion::class, 'course_id', 'id');
     }

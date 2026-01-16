@@ -209,9 +209,14 @@
                             </div>
                         @endif
                         <div class="flex shrink-0 w-[120px] items-center">
-                            <a href="{{ route('dashboard.learning.course.show', $course) }}"
-                                class="w-full h-[41px] p-[10px_20px] bg-[#6436F1] rounded-full font-bold text-sm text-white transition-all duration-300 hover:shadow-[0_4px_15px_0_#6436F14D] text-center">Start
-                                Test</a>
+                            @if($course->nextQuestionId)
+                                <a href="{{ route('dashboard.learning.course.show', ['course' => $course->id, 'question' => $course->nextQuestionId])}}"
+                                    class="w-full h-[41px] p-[10px_20px] bg-[#6436F1] rounded-full font-bold text-sm text-white transition-all duration-300 hover:shadow-[0_4px_15px_0_#6436F14D] text-center">Start
+                                    Test</a>
+                            @else
+                                <a href="{{ route('dashboard.learning.rapport.course', $course) }}"
+                                    class="w-full h-[41px] p-[10px_20px] rounded-full font-bold text-sm text-white transition-all duration-300 hover:shadow-[0_4px_15px_0_#2326314D] text-center" style="background-color: #232631;">Results</a>
+                            @endif
                         </div>
                     </div>
                 @empty

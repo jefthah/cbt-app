@@ -14,9 +14,13 @@ class CourseStudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Course $course)
     {
-        //
+        $students = $course->students()->orderBy('id', 'DESC')->get();
+        return view('admin.students.add_student', [
+            'course' => $course,
+            'students' => $students
+        ]);
     }
 
     /**
@@ -63,7 +67,7 @@ class CourseStudentController extends Controller
         try {
             $course->students()->attach($user->id);
             DB::commit();
-            return redirect()->route('dashboard.course.course.index', $course);
+            return redirect()->route('dashboard.courses.show', $course);
         } catch (\Throwable $e) {
             DB::rollBack();
             $error = ValidationException::withMessages([
