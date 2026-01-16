@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/learning', [LearningController::class, 'index'])->middleware('role:student')->name('learning.index');
 
+        Route::get('/learning/{course}', [LearningController::class, 'show'])->middleware('role:student')->name('learning.course.show');
+
         Route::post('/learning/{courses}/{questions}', [StudentAnswerController::class, 'store'])->middleware('role:student')->name('learning.course.answer.store');
 
     });

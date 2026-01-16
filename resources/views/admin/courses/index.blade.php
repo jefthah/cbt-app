@@ -106,7 +106,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
-                                class="p-[10px_16px] flex items-center gap-[14px] rounded-full h-11 transition-all duration-300 hover:bg-[#2B82FE] w-full">
+                                class="p-[10px_16px] flex items-center gap-[14px] rounded-full h-11 transition-all duration-300 hover:bg-[#2B82FE] w-full text-left">
                                 <div>
                                     <img src="{{ asset('images/icons/security-safe.svg') }}" alt="icon">
                                 </div>
